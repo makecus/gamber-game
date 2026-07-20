@@ -1240,6 +1240,246 @@ book.remove();
 
 
 }
+// =====================================
+// 몬스터 진화 시스템
+// 맨 아래 추가
+// =====================================
+
+
+// 진화 데이터
+
+const evolutionData={
+
+
+"슬라임":[
+{
+level:10,
+name:"빅 슬라임",
+hp:200,
+color:"lime"
+},
+{
+level:30,
+name:"킹 슬라임",
+hp:800,
+color:"gold"
+},
+{
+level:60,
+name:"신성 슬라임",
+hp:3000,
+color:"white"
+}
+],
+
+
+
+"좀비":[
+{
+level:10,
+name:"강화 좀비",
+hp:300,
+color:"darkgreen"
+},
+{
+level:40,
+name:"좀비 대장",
+hp:1200,
+color:"purple"
+}
+],
+
+
+
+"드래곤":[
+{
+level:20,
+name:"화염 드래곤",
+hp:2000,
+color:"orange"
+},
+{
+level:50,
+name:"고대 드래곤",
+hp:8000,
+color:"red"
+},
+{
+level:100,
+name:"신룡",
+hp:30000,
+color:"gold"
+}
+]
+
+
+};
+
+
+
+
+// 몬스터 경험치 추가
+
+function addMonsterExp(monster,exp){
+
+
+if(!monster.exp)
+monster.exp=0;
+
+
+if(!monster.level)
+monster.level=1;
+
+
+
+monster.exp+=exp;
+
+
+
+let need=
+monster.level*100;
+
+
+
+if(monster.exp>=need){
+
+
+monster.exp=0;
+
+monster.level++;
+
+
+monster.hp+=50;
+
+
+
+console.log(
+monster.name+
+" 레벨업!"
+);
+
+
+
+checkEvolution(monster);
+
+
+}
+
+
+
+}
+
+
+
+
+
+// 진화 확인
+
+function checkEvolution(monster){
+
+
+let list=
+evolutionData[monster.name];
+
+
+if(!list)
+return;
+
+
+
+for(let evo of list){
+
+
+if(monster.level>=evo.level){
+
+
+monster.name=evo.name;
+
+monster.hp=evo.hp;
+
+monster.color=evo.color;
+
+
+
+monster.evolved=true;
+
+
+
+}
+
+}
+
+
+
+}
+
+
+
+// 진화 이펙트
+
+function drawEvolutionEffect(monster){
+
+
+if(!monster.evolved)
+return;
+
+
+ctx.save();
+
+
+ctx.translate(
+monster.x,
+monster.y
+);
+
+
+
+ctx.strokeStyle="gold";
+
+ctx.lineWidth=5;
+
+
+ctx.beginPath();
+
+ctx.arc(
+0,
+0,
+monster.size+20,
+0,
+Math.PI*2
+);
+
+ctx.stroke();
+
+
+
+ctx.restore();
+
+
+}
+
+
+
+
+
+// 처치 시 경험치 지급
+
+function rewardMonsterExp(){
+
+
+for(let m of monsterBook){
+
+
+addMonsterExp(
+m,
+10
+);
+
+
+}
+
+
+}
 </script>
 
 </body>
