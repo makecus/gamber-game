@@ -1480,6 +1480,271 @@ m,
 
 
 }
+    // =====================================
+// 몬스터 펫 전투 + 던전 시스템
+// =====================================
+
+
+// 플레이어 펫
+
+let activePet=null;
+
+
+// 골드
+
+let gold=0;
+
+
+
+// 펫 선택
+
+function selectPet(index){
+
+
+if(!monsterBook[index])
+return;
+
+
+activePet=
+monsterBook[index];
+
+
+alert(
+activePet.name+
+" 장착!"
+);
+
+
+}
+
+
+
+// 펫 공격
+
+function petAttack(){
+
+
+if(!activePet)
+return;
+
+
+
+let target=enemies[0];
+
+
+if(!target)
+return;
+
+
+
+target.hp-=activePet.hp/50;
+
+
+
+// 처치
+
+if(target.hp<=0){
+
+
+let index=
+enemies.indexOf(target);
+
+
+if(index!=-1){
+
+enemies.splice(
+index,
+1
+);
+
+score+=50;
+
+spawnEnemy();
+
+}
+
+
+}
+
+
+
+}
+
+
+
+// 자동 공격
+
+setInterval(()=>{
+
+petAttack();
+
+},1000);
+
+
+
+
+
+// =================================
+// 던전 시스템
+// =================================
+
+
+let dungeonRunning=false;
+
+
+
+function enterDungeon(){
+
+
+if(!activePet){
+
+alert(
+"펫을 먼저 선택하세요"
+);
+
+return;
+
+}
+
+
+
+if(dungeonRunning)
+return;
+
+
+
+dungeonRunning=true;
+
+
+
+alert(
+activePet.name+
+" 던전 출발!"
+);
+
+
+
+let time=
+10;
+
+
+
+let timer=setInterval(()=>{
+
+
+time--;
+
+
+
+if(time<=0){
+
+
+clearInterval(timer);
+
+
+dungeonRunning=false;
+
+
+
+let reward=
+Math.floor(
+activePet.hp/10
+)+
+Math.random()*100;
+
+
+
+reward=Math.floor(reward);
+
+
+
+gold+=reward;
+
+
+
+alert(
+"던전 성공!\n"+
+reward+
+" 골드 획득"
+);
+
+
+
+updateGold();
+
+
+
+}
+
+
+
+},1000);
+
+
+
+}
+
+
+
+
+
+// 골드 표시
+
+function updateGold(){
+
+
+let g=
+document.getElementById(
+"gold"
+);
+
+
+if(g)
+g.innerHTML=gold;
+
+
+}
+
+
+
+// 몬스터 강화
+
+function upgradePet(){
+
+
+if(!activePet)
+return;
+
+
+
+if(gold<100)
+{
+
+alert(
+"골드 부족"
+);
+
+return;
+
+}
+
+
+
+gold-=100;
+
+
+activePet.hp+=100;
+
+
+alert(
+"펫 강화 성공!"
+);
+
+
+updateGold();
+
+
+}
 </script>
 
 </body>
