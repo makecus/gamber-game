@@ -936,6 +936,310 @@ e.animation="walk";
 
 
 }
+
+// =====================================
+// 몬스터 카드 도감 + 뽑기 시스템
+// 맨 아래 추가
+// =====================================
+
+
+let monsterBook=[];
+
+
+// 등급
+
+const rarity=[
+{
+name:"일반",
+chance:60,
+color:"gray"
+},
+{
+name:"희귀",
+chance:25,
+color:"blue"
+},
+{
+name:"영웅",
+chance:10,
+color:"purple"
+},
+{
+name:"전설",
+chance:4,
+color:"orange"
+},
+{
+name:"신화",
+chance:1,
+color:"gold"
+}
+];
+
+
+
+// 카드 생성
+
+function createMonsterCard(monster){
+
+
+let r=Math.random()*100;
+
+let total=0;
+
+let rank;
+
+
+for(let i of rarity){
+
+total+=i.chance;
+
+
+if(r<=total){
+
+rank=i;
+
+break;
+
+}
+
+}
+
+
+
+let card={
+
+name:monster.name,
+
+hp:monster.hp,
+
+speed:monster.speed,
+
+rarity:rank.name,
+
+color:rank.color,
+
+level:1
+
+};
+
+
+monsterBook.push(card);
+
+
+saveBook();
+
+
+showCard(card);
+
+
+}
+
+
+
+// 저장
+
+function saveBook(){
+
+localStorage.setItem(
+"monsterBook",
+JSON.stringify(monsterBook)
+);
+
+}
+
+
+
+// 불러오기
+
+function loadBook(){
+
+let data=
+localStorage.getItem(
+"monsterBook"
+);
+
+
+if(data){
+
+monsterBook=
+JSON.parse(data);
+
+}
+
+}
+
+loadBook();
+
+
+
+// 뽑기
+
+function monsterGacha(){
+
+
+let monster=
+monsterTypes[
+Math.floor(
+Math.random()*monsterTypes.length
+)
+];
+
+
+
+createMonsterCard(monster);
+
+
+}
+
+
+
+// 카드 표시
+
+function showCard(card){
+
+
+let box=
+document.createElement("div");
+
+
+box.style.position="absolute";
+
+box.style.left="50%";
+
+box.style.top="50%";
+
+box.style.transform=
+"translate(-50%,-50%)";
+
+
+box.style.width="250px";
+
+box.style.height="350px";
+
+
+box.style.background=
+card.color;
+
+
+box.style.borderRadius="20px";
+
+
+box.style.color="white";
+
+box.style.fontSize="25px";
+
+box.style.textAlign="center";
+
+box.style.paddingTop="30px";
+
+
+box.innerHTML=`
+
+<h2>${card.name}</h2>
+
+<hr>
+
+등급 : ${card.rarity}
+
+<br><br>
+
+❤️ ${card.hp}
+
+<br>
+
+⚡ ${card.speed}
+
+<br><br>
+
+LV.${card.level}
+
+`;
+
+
+
+document.body.appendChild(box);
+
+
+
+setTimeout(()=>{
+
+box.remove();
+
+},3000);
+
+
+}
+
+
+
+// 도감 보기
+
+function openMonsterBook(){
+
+
+let book=
+document.createElement("div");
+
+
+book.style.position="absolute";
+
+book.style.left="10px";
+
+book.style.top="100px";
+
+book.style.background="rgba(0,0,0,.8)";
+
+book.style.color="white";
+
+book.style.padding="20px";
+
+book.style.maxHeight="500px";
+
+book.style.overflow="auto";
+
+
+
+book.innerHTML="<h2>🧟 몬스터 도감</h2>";
+
+
+
+monsterBook.forEach(m=>{
+
+
+book.innerHTML+=`
+
+<div>
+
+${m.name}
+
+<br>
+
+등급:${m.rarity}
+
+HP:${m.hp}
+
+<hr>
+
+</div>
+
+`;
+
+});
+
+
+document.body.appendChild(book);
+
+
+
+setTimeout(()=>{
+
+book.remove();
+
+},10000);
+
+
+}
 </script>
 
 </body>
