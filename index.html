@@ -505,7 +505,437 @@ requestAnimationFrame(loop);
 
 
 loop();
+// =================================
+// 몬스터 외형 + 애니메이션 시스템
+// 맨 아래 추가
+// =================================
 
+
+// 몬스터 애니메이션 시간
+for(let e of enemies){
+
+    if(e.time===undefined){
+        e.time=0;
+    }
+
+}
+
+
+
+// 몬스터 움직임 애니메이션
+
+function monsterAnimation(e){
+
+    e.time += 0.1;
+
+
+    // 걷기 흔들림
+    e.offset =
+    Math.sin(e.time)*3;
+
+
+    // 날기
+    if(e.animation==="fly"){
+
+        e.float =
+        Math.sin(e.time)*5;
+
+    }
+
+
+    // 점프
+    if(e.animation==="jump"){
+
+        e.float =
+        Math.abs(
+        Math.sin(e.time)
+        )*15;
+
+    }
+
+}
+
+
+
+// 날개
+
+function drawWings(e){
+
+if(!e.wings)return;
+
+
+ctx.fillStyle=e.wingColor || "white";
+
+
+ctx.beginPath();
+
+ctx.ellipse(
+-e.size,
+0,
+e.size/2,
+e.size,
+0,
+0,
+Math.PI*2
+);
+
+ctx.fill();
+
+
+
+ctx.beginPath();
+
+ctx.ellipse(
+e.size,
+0,
+e.size/2,
+e.size,
+0,
+0,
+Math.PI*2
+);
+
+ctx.fill();
+
+
+}
+
+
+
+// 갑옷
+
+function drawArmor(e){
+
+if(!e.armor)return;
+
+
+ctx.strokeStyle=
+e.armorColor || "silver";
+
+
+ctx.lineWidth=6;
+
+
+ctx.beginPath();
+
+ctx.arc(
+0,
+0,
+e.size+8,
+0,
+Math.PI*2
+);
+
+ctx.stroke();
+
+
+}
+
+
+
+// 무기
+
+function drawMonsterWeapon(e){
+
+if(!e.weapon)return;
+
+
+
+// 검
+
+if(e.weapon==="sword"){
+
+
+ctx.fillStyle="gray";
+
+ctx.fillRect(
+e.size,
+-5,
+35,
+10
+);
+
+
+}
+
+
+// 불
+
+if(e.weapon==="fire"){
+
+
+ctx.fillStyle="orange";
+
+
+ctx.beginPath();
+
+ctx.arc(
+e.size+20,
+0,
+15,
+0,
+Math.PI*2
+);
+
+ctx.fill();
+
+
+}
+
+
+// 레이저
+
+if(e.weapon==="laser"){
+
+
+ctx.fillStyle="cyan";
+
+
+ctx.fillRect(
+e.size,
+-3,
+40,
+6
+);
+
+
+}
+
+
+// 지팡이
+
+if(e.weapon==="staff"){
+
+
+ctx.fillStyle="gold";
+
+
+ctx.fillRect(
+e.size,
+-25,
+5,
+50
+);
+
+
+}
+
+
+}
+
+
+
+// 특수 효과
+
+function drawMonsterEffect(e){
+
+
+
+if(e.effect==="flame"){
+
+
+ctx.fillStyle="orange";
+
+ctx.beginPath();
+
+ctx.arc(
+0,
+-e.size,
+15,
+0,
+Math.PI*2
+);
+
+ctx.fill();
+
+
+}
+
+
+
+if(e.effect==="shadow"){
+
+
+ctx.shadowBlur=30;
+
+ctx.shadowColor="purple";
+
+
+}
+
+
+
+if(e.effect==="electric"){
+
+
+ctx.strokeStyle="yellow";
+
+ctx.lineWidth=3;
+
+
+ctx.beginPath();
+
+ctx.arc(
+0,
+0,
+e.size+15,
+0,
+Math.PI*2
+);
+
+ctx.stroke();
+
+
+}
+
+
+
+}
+
+
+
+// 최종 몬스터 그리기
+
+function drawCustomMonster(e){
+
+
+monsterAnimation(e);
+
+
+ctx.save();
+
+
+ctx.translate(
+e.x,
+e.y+(e.float||0)
+);
+
+
+
+drawMonsterEffect(e);
+
+
+drawWings(e);
+
+
+drawArmor(e);
+
+
+
+// 몸
+
+ctx.fillStyle=e.color;
+
+
+ctx.beginPath();
+
+ctx.arc(
+0,
+0,
+e.size,
+0,
+Math.PI*2
+);
+
+ctx.fill();
+
+
+
+// 눈
+
+ctx.fillStyle="white";
+
+
+ctx.beginPath();
+
+ctx.arc(
+-e.size/3,
+-5,
+5,
+0,
+Math.PI*2
+);
+
+ctx.fill();
+
+
+ctx.beginPath();
+
+ctx.arc(
+e.size/3,
+-5,
+5,
+0,
+Math.PI*2
+);
+
+ctx.fill();
+
+
+
+// 무기
+
+drawMonsterWeapon(e);
+
+
+
+ctx.restore();
+
+
+}
+
+
+
+// 기존 draw() 안의 적 그리기 부분을 이것으로 교체
+
+/*
+for(let e of enemies){
+
+drawCustomMonster(e);
+
+}
+*/
+
+
+// =================================
+// 몬스터 능력 추가 예시
+// =================================
+
+function addMonsterStyle(e,type){
+
+
+if(type==="dragon"){
+
+e.wings=true;
+e.weapon="fire";
+e.effect="flame";
+e.animation="fly";
+
+}
+
+
+if(type==="knight"){
+
+e.armor=true;
+e.weapon="sword";
+e.effect="shadow";
+e.animation="walk";
+
+}
+
+
+
+if(type==="robot"){
+
+e.armor=true;
+e.weapon="laser";
+e.effect="electric";
+e.animation="walk";
+
+}
+
+
+}
 </script>
 
 </body>
