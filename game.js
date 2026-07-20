@@ -364,3 +364,141 @@ innerHeight
 );
 
 };
+// 모바일 조이스틱
+
+let joy=document.getElementById("joystick");
+let stick=document.getElementById("stick");
+
+
+let moveX=0;
+let moveY=0;
+
+
+joy.addEventListener(
+"touchmove",
+e=>{
+
+
+let touch=e.touches[0];
+
+let rect=
+joy.getBoundingClientRect();
+
+
+let x=
+touch.clientX-rect.left-60;
+
+let y=
+touch.clientY-rect.top-60;
+
+
+let max=40;
+
+
+x=Math.max(
+-mmax,
+Math.min(max,x)
+);
+
+
+y=Math.max(
+-max,
+Math.min(max,y)
+);
+
+
+stick.style.left=
+(x+35)+"px";
+
+
+stick.style.top=
+(y+35)+"px";
+
+
+moveX=x/40;
+moveY=y/40;
+
+
+});
+
+
+joy.addEventListener(
+"touchend",
+()=>{
+
+moveX=0;
+moveY=0;
+
+stick.style.left="35px";
+stick.style.top="35px";
+
+});
+
+
+
+// 모바일 이동 추가
+
+function mobileMove(){
+
+if(!controls.isLocked){
+
+controls.moveRight(
+moveX*.12
+);
+
+controls.moveForward(
+moveY*.12
+);
+
+}
+
+}
+
+
+setInterval(
+mobileMove,
+16
+);
+
+
+
+
+// 모바일 발사
+
+document
+.getElementById("fire")
+.onclick=()=>{
+
+
+if(ammo<=0)return;
+
+
+ammo--;
+
+document.getElementById("ammo").innerHTML=ammo;
+
+
+let b=new THREE.Mesh(
+new THREE.SphereGeometry(.05),
+new THREE.MeshBasicMaterial({
+color:0xffff00
+})
+);
+
+
+b.position.copy(camera.position);
+
+
+let dir=new THREE.Vector3();
+
+camera.getWorldDirection(dir);
+
+b.dir=dir;
+
+
+scene.add(b);
+
+bullets.push(b);
+
+
+};
